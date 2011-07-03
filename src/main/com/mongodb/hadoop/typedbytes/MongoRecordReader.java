@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.RecordReader;
 import org.apache.hadoop.mapred.TaskAttemptContext;
+import org.apache.hadoop.record.Buffer;
 import org.apache.hadoop.typedbytes.TypedBytesWritable;
 import org.bson.BSONObject;
 
@@ -34,12 +35,15 @@ public class MongoRecordReader implements RecordReader<TypedBytesWritable, Typed
 		return new TypedBytesWritable();
 	}
 	
-	public TypedBytesWritable getCurrentKey() {
-		return (TypedBytesWritable) _cur.get("_id");
+	public byte[] getCurrentKey() {
+		String test = _cur.get("_id").toString();
+		return test.getBytes();
 	}
 	
-	public TypedBytesWritable getCurrentValue() {
-        return (TypedBytesWritable) _cur;
+	public byte[] getCurrentValue() {
+        //return _cur;
+		String test = _cur.toString();
+		return test.getBytes();
     }
 	
 	@Override
@@ -66,12 +70,14 @@ public class MongoRecordReader implements RecordReader<TypedBytesWritable, Typed
 
 	@Override
 	public boolean next(TypedBytesWritable key, TypedBytesWritable value) throws IOException {
-		//FIXME: These are null. Why?
-		log.info("Key: " + key);
-		log.info("Value: " + value);
+		
 		if (nextKeyValue()) {
             if (_cur != null) {
-            	log.info( _cur.get("_id") );
+            	key.setValue(new Buffer(getCurrentKey()));
+                value.setValue(new Buffer(getCurrentValue()));
+            	//log.info( _cur.get("_id") );
+            } else {
+            	log.warn("_CUR IS NULL!!!");
             }
             return true;
         }
@@ -87,7 +93,6 @@ public class MongoRecordReader implements RecordReader<TypedBytesWritable, Typed
     BSONObject _cur;
     float _seen = 0;
     float _total;
-    private byte[][] inputColumns;
 
     private static final Log log = LogFactory.getLog(MongoRecordReader.class);
  
