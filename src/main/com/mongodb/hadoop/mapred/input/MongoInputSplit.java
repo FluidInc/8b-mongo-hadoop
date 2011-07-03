@@ -111,7 +111,7 @@ public class MongoInputSplit implements Writable, InputSplit {
         objIn.close();
     }
 
-    DBCursor getCursor() {
+    public DBCursor getCursor() {
         // Return the cursor with the split's query, etc. already slotted in for
         // them.
         // todo - support limit/skip

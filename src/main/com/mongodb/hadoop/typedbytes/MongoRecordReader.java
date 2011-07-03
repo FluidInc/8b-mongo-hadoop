@@ -2,6 +2,8 @@ package com.mongodb.hadoop.typedbytes;
 
 import java.io.IOException;
 
+import javax.sound.midi.MidiDevice.Info;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.mapred.InputSplit;
@@ -64,11 +66,13 @@ public class MongoRecordReader implements RecordReader<TypedBytesWritable, Typed
 
 	@Override
 	public boolean next(TypedBytesWritable key, TypedBytesWritable value) throws IOException {
+		//FIXME: These are null. Why?
+		log.info("Key: " + key);
+		log.info("Value: " + value);
 		if (nextKeyValue()) {
-            log.debug("Had another k/v");
-            key.set( getCurrentKey() );
-            value.set( getCurrentValue() );
-            log.info("Key: " + key + " Value: " + value);
+            if (_cur != null) {
+            	log.info( _cur.get("_id") );
+            }
             return true;
         }
         else {
@@ -83,7 +87,8 @@ public class MongoRecordReader implements RecordReader<TypedBytesWritable, Typed
     BSONObject _cur;
     float _seen = 0;
     float _total;
+    private byte[][] inputColumns;
 
     private static final Log log = LogFactory.getLog(MongoRecordReader.class);
-
+ 
 }
