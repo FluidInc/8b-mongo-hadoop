@@ -11,7 +11,7 @@ import org.apache.hadoop.mapred.TaskAttemptContext;
 import org.apache.hadoop.util.Progressable;
 
 import com.mongodb.hadoop.mapred.output.MongoOutputCommiter;
-import com.mongodb.hadoop.mapred.output.MongoRecordWriter;
+import com.mongodb.hadoop.typedbytes.MongoRecordWriter;
 import com.mongodb.hadoop.util.MongoConfigUtil;
 
 public class MongoOutputFormat<K, V> implements OutputFormat<K, V> {
@@ -25,7 +25,7 @@ public class MongoOutputFormat<K, V> implements OutputFormat<K, V> {
     }
 
     public RecordWriter<K, V> getRecordWriter(FileSystem ignored, JobConf job, String name, Progressable progress) {
-        return new MongoRecordWriter<K, V>(MongoConfigUtil.getOutputCollection(job), job);
+        return (RecordWriter<K, V>) new MongoRecordWriter(MongoConfigUtil.getOutputCollection(job), job);
     }
 
 }

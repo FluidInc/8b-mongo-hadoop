@@ -31,7 +31,6 @@ import com.mongodb.hadoop.*;
 public class MongoRecordWriter implements RecordWriter<TypedBytesWritable, TypedBytesWritable> {
 
     public MongoRecordWriter(DBCollection c, JobConf conf) {
-    	log.warn("NATHAN: " + c.getFullName().toString());
         _collection = c;
         _conf = conf;
     }
@@ -72,7 +71,7 @@ public class MongoRecordWriter implements RecordWriter<TypedBytesWritable, Typed
     	}
         final DBObject o = new BasicDBObject();
 
-        log.info( "Writing out data {k: " + key + ", value:  " + value);
+        //log.info( "Writing out data {k: " + key + ", value:  " + value);
         if (key instanceof MongoOutput) {
             ((MongoOutput) key).appendAsKey(o);
         }
@@ -80,7 +79,9 @@ public class MongoRecordWriter implements RecordWriter<TypedBytesWritable, Typed
             o.put("_id", key);
         }
         else {
-            o.put("_id", toBSON(key));
+        	//log.info( "Writing out key: " + key );
+        	o.put("my_key", key.toString());
+            //o.put("_id", toBSON(key));
         }
 
         if (value instanceof MongoOutput) {
@@ -90,7 +91,9 @@ public class MongoRecordWriter implements RecordWriter<TypedBytesWritable, Typed
             o.putAll((BSONObject) value);
         }
         else {
-            o.put("value", toBSON(value));
+        	//log.info( "Writing out value: " + value );
+        	o.put("my_val", value.toString());
+            //o.put("value", toBSON(value));
         }
 
         try {
