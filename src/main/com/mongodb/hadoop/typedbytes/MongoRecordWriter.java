@@ -30,9 +30,11 @@ import com.mongodb.hadoop.*;
 
 public class MongoRecordWriter implements RecordWriter<TypedBytesWritable, TypedBytesWritable> {
 
-    public MongoRecordWriter(DBCollection c, JobConf conf) {
+    public MongoRecordWriter(DBCollection c, JobConf job) {
+    	_conf = new MongoConfig(job);
+    	_fields = _conf.getOutputFields();
         _collection = c;
-        _conf = conf;
+        _job = job;
     }
 
     public void close(Reporter reporter) {
@@ -66,6 +68,7 @@ public class MongoRecordWriter implements RecordWriter<TypedBytesWritable, Typed
     }
 
     public void write(TypedBytesWritable key, TypedBytesWritable value) throws IOException {
+    	//TODO: Use _fields to set the output properties of a MongoDocument
     	if (key == null || value == null) {
     		return;
     	}
@@ -105,11 +108,13 @@ public class MongoRecordWriter implements RecordWriter<TypedBytesWritable, Typed
     }
 
     public JobConf getConf() {
-        return _conf;
+        return _job;
     }
 
     final DBCollection _collection;
-    final JobConf _conf;
+    final JobConf _job;
+    final MongoConfig _conf;
+    final DBObject _fields;
 
     private static final Log log = LogFactory.getLog(MongoRecordWriter.class);
 

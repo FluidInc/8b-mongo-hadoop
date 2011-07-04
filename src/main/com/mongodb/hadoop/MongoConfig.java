@@ -247,6 +247,10 @@ public class MongoConfig {
     public DBObject getFields(){
         return MongoConfigUtil.getFields( _conf );
     }
+    
+    public DBObject getOutputFields() {
+    	return MongoConfigUtil.getOutputFields( _conf );
+    }
 
     public void setSort( String sort ){
         MongoConfigUtil.setSort( _conf, sort );

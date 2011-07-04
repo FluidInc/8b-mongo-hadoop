@@ -62,6 +62,7 @@ public class MongoConfigUtil {
 
     public static final String INPUT_QUERY = "mongo.input.query";
     public static final String INPUT_FIELDS = "mongo.input.fields";
+    public static final String OUTPUT_FIELDS = "mongo.output.fields";
     public static final String INPUT_SORT = "mongo.input.sort";
     public static final String INPUT_LIMIT = "mongo.input.limit";
     public static final String INPUT_SKIP = "mongo.input.skip";
@@ -340,6 +341,18 @@ public class MongoConfigUtil {
      **/
     public static DBObject getFields( Configuration conf ){
         return getDBObject( conf, INPUT_FIELDS );
+    }
+    
+    public static void setOutputFields( Configuration conf , String fields ){
+        setJSON( conf, OUTPUT_FIELDS, fields );
+    }
+
+    public static void setOutputFields( Configuration conf , DBObject fields ){
+        setDBObject( conf, OUTPUT_FIELDS, fields );
+    }
+    
+    public static DBObject getOutputFields( Configuration conf ){
+        return getDBObject( conf, OUTPUT_FIELDS );
     }
 
     public static void setSort( Configuration conf , String sort ){
